@@ -59,7 +59,7 @@ transform = transforms.Compose([
     transforms.Normalize((0.5,0.5,0.5), (0.5,0.5,0.5))
 ])
 
-dataset = torchvision.datasets.ImageFolder(root='../../../database2/celebA/',
+dataset = torchvision.datasets.ImageFolder(root=opt.data,
                                         transform=transform,
                                         )
 
