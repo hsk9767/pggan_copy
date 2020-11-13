@@ -9,7 +9,7 @@ from torchvision.utils import save_image
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data', type=str, default='DATA', help='directory containing the data')
-parser.add_argument('--weight', type=str, default='', help='directory containing the weight')
+parser.add_argument('--weight', type=str, default='./weight/G.pth', help='directory containing the weight')
 parser.add_argument('--outd', default='Results_cutmix', help='directory to save results')
 parser.add_argument('--outf', default='Images', help='folder to save synthetic images')
 parser.add_argument('--outl', default='Losses', help='folder to save Losses')
