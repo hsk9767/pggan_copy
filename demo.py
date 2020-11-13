@@ -9,7 +9,7 @@ from torchvision.utils import save_image
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data', type=str, default='DATA', help='directory containing the data')
-parser.add_argument('--weight', type=str, default='./weight/G.pth', help='directory containing the weight')
+parser.add_argument('--weight', type=str, default='./G.pth', help='directory containing the weight')
 parser.add_argument('--outd', default='Results_cutmix', help='directory to save results')
 parser.add_argument('--outf', default='Images', help='folder to save synthetic images')
 parser.add_argument('--outl', default='Losses', help='folder to save Losses')
@@ -41,8 +41,9 @@ if not os.path.exists(opt.outd):
     os.makedirs(os.path.join(opt.outd, opt.outf))
 
 # Load the weight
-if not opt.weight:
-    raise NotImplementedError('no weight file')
+#if not os.path.isfile(opt.weight):
+ #   wget.download('http://')
+
 G = Generator(max_res=opt.MAX_RES, nch=opt.nch, nc=3, bn=opt.BN, ws=opt.WS, pn=opt.PN).to(DEVICE)
 G.load_state_dict(torch.load(opt.weight_path))
 logging.info('Model Weight Loaded')
