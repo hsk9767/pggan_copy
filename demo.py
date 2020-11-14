@@ -1,6 +1,9 @@
 import os
+import wget
+import os.path
 import argparse
 import logging
+
 
 from model import *
 from utils import *
@@ -9,8 +12,8 @@ from torchvision.utils import save_image
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data', type=str, default='DATA', help='directory containing the data')
-parser.add_argument('--weight', type=str, default='./G.pth', help='directory containing the weight')
-parser.add_argument('--outd', default='Results_cutmix', help='directory to save results')
+parser.add_argument('--weight', type=str, default='./weight/Gs.pth', help='directory containing the weight')
+parser.add_argument('--outd', default='demo_result', help='directory to save results')
 parser.add_argument('--outf', default='Images', help='folder to save synthetic images')
 parser.add_argument('--outl', default='Losses', help='folder to save Losses')
 parser.add_argument('--outm', default='Models', help='folder to save models')
@@ -23,7 +26,7 @@ parser.add_argument('--WS', action='store_true', help='use WeightScale in G and 
 parser.add_argument('--PN', action='store_true', help='use PixelNorm in G')
 parser.add_argument('--CM', action='store_true', help='use cutmix in D')
 parser.add_argument('--MAX_RES', type=int, default=7, help='log2(im_size) - 2')
-parser.add_argument('--savenum', type=int, default=64, help='number of examples images to save')
+parser.add_argument('--savenum', type=int, default=36, help='number of examples images to save')
 
 
 opt = parser.parse_args()
@@ -34,6 +37,8 @@ transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
+logger = logging.getLogger('name')
+logger.setLevel(logging.INFO)
 
 # creating output folders
 if not os.path.exists(opt.outd):
@@ -41,25 +46,15 @@ if not os.path.exists(opt.outd):
     os.makedirs(os.path.join(opt.outd, opt.outf))
 
 # Load the weight
-#if not os.path.isfile(opt.weight):
- #   wget.download('http://')
-
-G = Generator(max_res=opt.MAX_RES, nch=opt.nch, nc=3, bn=opt.BN, ws=opt.WS, pn=opt.PN).to(DEVICE)
-G.load_state_dict(torch.load(opt.weight_path))
+G = Generator(max_res=opt.MAX_RES, nch=opt.nch, nc=3).to(DEVICE)
+G.load_state_dict(torch.load(opt.weight).state_dict())
+G.eval()
 logging.info('Model Weight Loaded')
-
+#
 # Generate
 z_save = hypersphere(torch.randn(opt.savenum, opt.nch * 32, 1, 1, device=DEVICE))
-fake_image = G(z_save, 7.00)
-save_image(fake_image, os.path.join(opt.outd, opt.outf, f'demo_img.jpg'),
-           nrow=8, pad_value=0, normalize=True, range=(-1, 1))
-logging.info('Image Generated and Saved')
-
-
-
-
-
-
-
-
-
+with torch.no_grad():
+    fake_image = G(z_save, 7.00)
+    save_image(fake_image, os.path.join(opt.outd, opt.outf, f'demo_img.jpg'),
+               nrow=6, pad_value=0, normalize=True, range=(-1, 1))
+logger.info('Image Generated and Saved')
