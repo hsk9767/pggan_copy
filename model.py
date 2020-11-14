@@ -6,7 +6,7 @@ from layers import *
 
 
 class Generator(nn.Module):
-    def __init__(self, max_res=8, nch=16, nc=3, bn=False, ws=False, pn=False, activ=nn.LeakyReLU(0.2)):
+    def __init__(self, max_res=8, nch=16, nc=3, bn=False, ws=True, pn=True, activ=nn.LeakyReLU(0.2)):
         super(Generator, self).__init__()
         # resolution of output as 4 * 2^max_res: 0 -> 4x4, 1 -> 8x8, ..., 8 -> 1024x1024
         self.max_res = max_res
