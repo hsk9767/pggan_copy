@@ -3,6 +3,8 @@ import wget
 import os.path
 import argparse
 import logging
+import warnings
+warnings.filterwarnings(action='ignore')
 
 
 from model import *
