@@ -57,4 +57,4 @@ with torch.no_grad():
     fake_image = G(z_save, 7.00)
     save_image(fake_image, os.path.join(opt.outd, opt.outf, f'demo_img.jpg'),
                nrow=6, pad_value=0, normalize=True, range=(-1, 1))
-logger.info('Image Generated and Saved')
+logging.info('Image Generated and Saved')
