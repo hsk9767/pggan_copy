@@ -2,7 +2,6 @@ import os
 import wget
 import os.path
 import argparse
-import logging
 import warnings
 warnings.filterwarnings(action='ignore')
 
@@ -51,7 +50,7 @@ if not os.path.exists(opt.outd):
 G = Generator(max_res=opt.MAX_RES, nch=opt.nch, nc=3).to(DEVICE)
 G.load_state_dict(torch.load(opt.weight).state_dict())
 G.eval()
-logger.info('Model Weight Loaded')
+print('Model Weight Loaded')
 #
 # Generate
 z_save = hypersphere(torch.randn(opt.savenum, opt.nch * 32, 1, 1, device=DEVICE))
@@ -59,4 +58,4 @@ with torch.no_grad():
     fake_image = G(z_save, 7.00)
     save_image(fake_image, os.path.join(opt.outd, opt.outf, f'demo_img.jpg'),
                nrow=6, pad_value=0, normalize=True, range=(-1, 1))
-logger.info(f'Image Generated and Saved {opt.outd}/{opt.outf}/demo_img.jpg')
+print(f'Image Generated and Saved {opt.outd}/{opt.outf}/demo_img.jpg')
